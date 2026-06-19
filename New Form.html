@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">HTML Form</h2>
+
+                    <form id="studentForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Mobile Number</label>
+                            <input type="number" class="form-control" id="phone">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sslc" class="form-label">SSLC Percentage</label>
+                            <input type="number" class="form-control" id="sslc" step="0.01">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="hsc" class="form-label">HSC Group</label>
+                            <select id="hsc" class="form-select">
+                                <option value="Biology">Biology</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Commerce">Commerce</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="hscPercent" class="form-label">HSC Percentage</label>
+                            <input type="number" class="form-control" id="hscPercent" step="0.01">
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="isStudent">
+                            <label class="form-check-label" for="isStudent">Is Student</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">Gender</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="male" name="gender" value="Male">
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="female" name="gender" value="Female">
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="others" name="gender" value="Others">
+                                <label class="form-check-label" for="others">Others</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">Submitted Details</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile Number</th>
+                                    <th>SSLC %</th>
+                                    <th>HSC Group</th>
+                                    <th>HSC %</th>
+                                    <th>Is Student</th>
+                                    <th>Gender</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const form = document.getElementById("studentForm");
+const detailsTableBody = document.getElementById("detailsTableBody");
+let editingRow = null;
+
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    result();
+});
+
+function result() {
+    const submitButton = form.querySelector('button[type="submit"]');
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const sslc = document.getElementById("sslc").value;
+    const hsc = document.getElementById("hsc").value;
+    const hscPercent = document.getElementById("hscPercent").value;
+    const isStudent = document.getElementById("isStudent").checked ? "Yes" : "No";
+    const genderInput = document.querySelector('input[name="gender"]:checked');
+    const gender = genderInput ? genderInput.value : "Not Selected";
+    if (editingRow) {
+        editingRow.cells[1].textContent = name || "-";
+        editingRow.cells[2].textContent = email || "-";
+        editingRow.cells[3].textContent = phone || "-";
+        editingRow.cells[4].textContent = sslc || "-";
+        editingRow.cells[5].textContent = hsc || "-";
+        editingRow.cells[6].textContent = hscPercent || "-";
+        editingRow.cells[7].textContent = isStudent;
+        editingRow.cells[8].textContent = gender;
+        editingRow = null;
+        submitButton.textContent = "Submit";
+    } else {
+        const rowNumber = detailsTableBody.rows.length + 1;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${rowNumber}</td>
+            <td>${name || "-"}</td>
+            <td>${email || "-"}</td>
+            <td>${phone || "-"}</td>
+            <td>${sslc || "-"}</td>
+            <td>${hsc || "-"}</td>
+            <td>${hscPercent || "-"}</td>
+            <td>${isStudent}</td>
+            <td>${gender}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-warning me-1" onclick="editRow(this)">Edit</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button>
+            </td>
+        `;
+
+        detailsTableBody.appendChild(row);
+    }
+
+    form.reset();
+    document.getElementById("name").focus();
+}
+
+function editRow(button) {
+    const row = button.closest("tr");
+
+    document.getElementById("name").value = row.cells[1].textContent === "-" ? "" : row.cells[1].textContent;
+    document.getElementById("email").value = row.cells[2].textContent === "-" ? "" : row.cells[2].textContent;
+    document.getElementById("phone").value = row.cells[3].textContent === "-" ? "" : row.cells[3].textContent;
+    document.getElementById("sslc").value = row.cells[4].textContent === "-" ? "" : row.cells[4].textContent;
+    document.getElementById("hsc").value = row.cells[5].textContent;
+    document.getElementById("hscPercent").value = row.cells[6].textContent === "-" ? "" : row.cells[6].textContent;
+    document.getElementById("isStudent").checked = row.cells[7].textContent === "Yes";
+
+    const gender = row.cells[8].textContent;
+    const genderInput = document.querySelector(`input[name="gender"][value="${gender}"]`);
+    if (genderInput) {
+        genderInput.checked = true;
+    } else {
+        document.querySelectorAll('input[name="gender"]').forEach(function (input) {
+            input.checked = false;
+        });
+    }
+
+    editingRow = row;
+    form.querySelector('button[type="submit"]').textContent = "Update";
+}
+
+function deleteRow(button) {
+    const row = button.closest("tr");
+    const wasEditingRow = editingRow === row;
+    row.remove();
+
+    Array.from(detailsTableBody.rows).forEach(function (currentRow, index) {
+        currentRow.cells[0].textContent = index + 1;
+    });
+
+    if (wasEditingRow) {
+        editingRow = null;
+        form.reset();
+        form.querySelector('button[type="submit"]').textContent = "Submit";
+    }
+}
+</script>
+
+</body>
+</html>
